@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MVCMovie.Controllers
 {
-    public class HelloWorldController: Controller
+    public class HelloWorldController : Controller
     {
 
         //GET: /HelloWorld/
@@ -17,10 +17,14 @@ namespace MVCMovie.Controllers
         }
 
         //GET: /HelloWorld/Welcome/
-        public string Welcome(string name)
+        public IActionResult Welcome(string name, int numTimes = 1)
         {
-            return HtmlEncoder.Default.HtmlEncode("Hello " + name + ", NumTimes is: "   );
+            ViewData["Message"] = "Hello " + name;
+            ViewData["NumTimes"] = numTimes;
 
+            return View();
+
+            //string: return HtmlEncoder.Default.HtmlEncode("Hello " + name + ", NumTimes is: " + numTimes);
         }
 
         //GET: /HelloWorld/Welcome/
