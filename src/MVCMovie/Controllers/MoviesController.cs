@@ -3,6 +3,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using MVCMovie.Models;
+using System;
 
 namespace MVCMovie.Controllers
 {
@@ -16,9 +17,20 @@ namespace MVCMovie.Controllers
         }
 
         // GET: Movies
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
-            return View(_context.Movie.ToList());
+            var movies = from m in _context.Movie
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(s => s.Title.Contains(searchString));
+            }
+            ViewData["Filter"] = searchString;
+            return View(movies);
+
+
+            //return View(_context.Movie.ToList());
         }
 
         // GET: Movies/Details/5
@@ -77,7 +89,8 @@ namespace MVCMovie.Controllers
         // POST: Movies/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Movie movie)
+        //ref: 5/1/16, Bind to protect from over posting (should be fixed by ms in next rel
+        public IActionResult Edit([Bind("ID,Title,ReleaseDate,Genre,Price")]Movie movie)
         {
             if (ModelState.IsValid)
             {
