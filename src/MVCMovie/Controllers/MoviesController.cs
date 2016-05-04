@@ -4,6 +4,8 @@ using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using MVCMovie.Models;
 using System;
+using Microsoft.AspNet.Http.Internal;
+using System.Collections.Generic;
 
 namespace MVCMovie.Controllers
 {
@@ -16,7 +18,36 @@ namespace MVCMovie.Controllers
             _context = context;    
         }
 
+
         // GET: Movies
+        [HttpGet] //default
+        public IActionResult Index(string movieGenre, string searchString)
+        {
+            var GenreQry = from m in _context.Movie
+                           orderby m.Genre
+                           select m.Genre;
+            var GenreList = new List<string>();
+            GenreList.AddRange(GenreQry.Distinct());
+            ViewData["movieGenre"] = new SelectList(GenreList);
+
+
+            var movies = from m in _context.Movie
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(m => m.Title.Contains(searchString));
+            }
+
+            if (!String.IsNullOrEmpty(movieGenre))
+            {
+                movies = movies.Where(m => m.Genre == movieGenre);
+            }
+
+            ViewData["Filter"] = searchString;
+            return View(movies);
+        }
+/*
         public IActionResult Index(string searchString)
         {
             var movies = from m in _context.Movie
@@ -24,13 +55,21 @@ namespace MVCMovie.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                movies = movies.Where(s => s.Title.Contains(searchString));
+                movies = movies.Where(m => m.Title.Contains(searchString));
             }
             ViewData["Filter"] = searchString;
             return View(movies);
 
 
             //return View(_context.Movie.ToList());
+        }
+*/
+
+
+        [HttpPost]
+        public string Index(FormCollection fc, string searchString)
+        {
+            return "From [HttpPost]Index: filter on " + searchString;
         }
 
         // GET: Movies/Details/5
