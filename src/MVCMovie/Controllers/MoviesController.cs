@@ -15,7 +15,7 @@ namespace MVCMovie.Controllers
 
         public MoviesController(ApplicationDbContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
 
@@ -47,23 +47,23 @@ namespace MVCMovie.Controllers
             ViewData["Filter"] = searchString;
             return View(movies);
         }
-/*
-        public IActionResult Index(string searchString)
-        {
-            var movies = from m in _context.Movie
-                         select m;
+        /*
+                public IActionResult Index(string searchString)
+                {
+                    var movies = from m in _context.Movie
+                                 select m;
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                movies = movies.Where(m => m.Title.Contains(searchString));
-            }
-            ViewData["Filter"] = searchString;
-            return View(movies);
+                    if (!String.IsNullOrEmpty(searchString))
+                    {
+                        movies = movies.Where(m => m.Title.Contains(searchString));
+                    }
+                    ViewData["Filter"] = searchString;
+                    return View(movies);
 
 
-            //return View(_context.Movie.ToList());
-        }
-*/
+                    //return View(_context.Movie.ToList());
+                }
+        */
 
 
         [HttpPost]
@@ -98,7 +98,7 @@ namespace MVCMovie.Controllers
         // POST: Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Movie movie)
+        public IActionResult Create([Bind("ID,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -129,7 +129,7 @@ namespace MVCMovie.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //ref: 5/1/16, Bind to protect from over posting (should be fixed by ms in next rel
-        public IActionResult Edit([Bind("ID,Title,ReleaseDate,Genre,Price")]Movie movie)
+        public IActionResult Edit([Bind("ID,Title,ReleaseDate,Genre,Price,Rating")]Movie movie)
         {
             if (ModelState.IsValid)
             {
