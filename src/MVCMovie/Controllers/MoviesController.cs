@@ -30,13 +30,13 @@ namespace MVCMovie.Controllers
             GenreList.AddRange(GenreQry.Distinct());
             ViewData["movieGenre"] = new SelectList(GenreList);
 
-
             var movies = from m in _context.Movie
                          select m;
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                movies = movies.Where(m => m.Title.Contains(searchString));
+                //movies = movies.Where(m => m.Title.Contains(searchString));
+                movies = movies.Where(m => (m.Title).Contains(searchString));
             }
 
             if (!String.IsNullOrEmpty(movieGenre))
@@ -47,24 +47,6 @@ namespace MVCMovie.Controllers
             ViewData["Filter"] = searchString;
             return View(movies);
         }
-        /*
-                public IActionResult Index(string searchString)
-                {
-                    var movies = from m in _context.Movie
-                                 select m;
-
-                    if (!String.IsNullOrEmpty(searchString))
-                    {
-                        movies = movies.Where(m => m.Title.Contains(searchString));
-                    }
-                    ViewData["Filter"] = searchString;
-                    return View(movies);
-
-
-                    //return View(_context.Movie.ToList());
-                }
-        */
-
 
         [HttpPost]
         public string Index(FormCollection fc, string searchString)
